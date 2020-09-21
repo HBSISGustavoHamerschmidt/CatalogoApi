@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CatalogoApi.Models;
+using CatalogoApi.Repo;
 using CatalogoApi.Validator;
 using Web.Api.Hbsis.Models.Context;
 
@@ -15,13 +16,14 @@ namespace CatalogoApi.Controllers
     [ApiController]
     public class CategoriasController : ControllerBase
     {
-        private readonly AppDbContext _context;
-
-        public CategoriasController(AppDbContext context) => _context = context;
+        private readonly ICatalogoRepo<Categoria> _repository;
+        public CategoriasController(ICatalogoRepo<Categoria> repository) => _repository = repository;
 
         [HttpGet]
         public ActionResult<IEnumerable<Categoria>> GetCategorias()
         {
+            return Ok(_repository.GetAll());
+
             return _context.Categoria.AsNoTracking().ToList();
         }
 
