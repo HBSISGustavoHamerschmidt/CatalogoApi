@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CatalogoApi.Models;
+using CatalogoApi.Validator;
 using Web.Api.Hbsis.Models.Context;
 
 namespace CatalogoApi.Controllers
@@ -27,31 +29,41 @@ namespace CatalogoApi.Controllers
             return _context.Produtos.AsNoTracking().ToList();
         }
 
-        [HttpGet("{id}",Name="ObterProduto")]
+        [HttpGet("{id}", Name = "ObterProduto")]
         public ActionResult<Produto> GetSingleProduto(int id)
         {
             var product = _context.Produtos.AsNoTracking().FirstOrDefault(p => p.ProdutoId == id);
 
             if (product is null)
-                return NotFound();
+                return NotFound("Produto não encontrado.");
 
             return product;
         }
 
         [HttpPost]
-        public ActionResult PostProduto([FromBody]Produto produto)
+        public ActionResult PostProduto([FromBody] Produto produto)
         {
+            var valida = new ValidaProduto(_context).ValidaCampos(produto);
+
             if (produto.ProdutoId != 0)
-                return BadRequest(
-                    "Identificador do produto é adicionado automaticamente e não deve ser passado como parâmetro.");
-            
+            {
+                valida.IsValid = false;
+                valida.Errors.Add("Id do produto já é inserida automaticamente e não pode ser inserida manualmente.");
+            }
+
+            if (!valida.IsValid)
+            {
+                return BadRequest(valida.Errors);
+            }
+
+
             produto.DataCadastro = DateTime.Now;
-            
+
             _context.Produtos.Add(produto);
             _context.SaveChanges();
 
             return new CreatedAtRouteResult("ObterProduto",
-                new {id = produto.ProdutoId}, produto);
+                new { id = produto.ProdutoId }, produto);
         }
 
         [HttpPut("{id}")]
@@ -71,7 +83,7 @@ namespace CatalogoApi.Controllers
             var produto = _context.Produtos.FirstOrDefault(p => p.ProdutoId == id);
 
             if (produto == null)
-                return NotFound();
+                return NotFound("Produto não encontrado.");
 
             _context.Produtos.Remove(produto);
             _context.SaveChanges();
