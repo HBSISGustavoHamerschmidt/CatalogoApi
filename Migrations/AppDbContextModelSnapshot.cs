@@ -48,7 +48,7 @@ namespace CatalogoApi.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CategoriaId")
+                    b.Property<int>("CategoriaId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DataCadastro")
@@ -86,7 +86,9 @@ namespace CatalogoApi.Migrations
                 {
                     b.HasOne("CatalogoApi.Models.Categoria", "Categoria")
                         .WithMany("Produtos")
-                        .HasForeignKey("CategoriaId");
+                        .HasForeignKey("CategoriaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

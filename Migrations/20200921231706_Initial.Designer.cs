@@ -10,7 +10,7 @@ using Web.Api.Hbsis.Models.Context;
 namespace CatalogoApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200921140646_Initial")]
+    [Migration("20200921231706_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,7 +50,7 @@ namespace CatalogoApi.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CategoriaId")
+                    b.Property<int>("CategoriaId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DataCadastro")
@@ -88,7 +88,9 @@ namespace CatalogoApi.Migrations
                 {
                     b.HasOne("CatalogoApi.Models.Categoria", "Categoria")
                         .WithMany("Produtos")
-                        .HasForeignKey("CategoriaId");
+                        .HasForeignKey("CategoriaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

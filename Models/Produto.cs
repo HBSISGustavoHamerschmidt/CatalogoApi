@@ -1,11 +1,13 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CatalogoApi.Models
 {
     public class Produto
     {
         // Always define Length of string
+        [DatabaseGenerated((DatabaseGeneratedOption.Identity))]
         [Key]
         public int ProdutoId { get; set; }
         [Required]
@@ -23,5 +25,6 @@ namespace CatalogoApi.Models
         public double Estoque { get; set; }
         public DateTime DataCadastro { get; set; }
         public Categoria Categoria { get; set; }
+        public int CategoriaId { get; set; }
     }
 }

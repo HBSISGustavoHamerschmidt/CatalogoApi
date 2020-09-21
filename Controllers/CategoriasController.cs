@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using CatalogoApi.Models;
+using CatalogoApi.Validator;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CatalogoApi.Models;
-using CatalogoApi.Repo;
-using CatalogoApi.Validator;
+using System.Collections.Generic;
+using System.Linq;
 using Web.Api.Hbsis.Models.Context;
 
 namespace CatalogoApi.Controllers
@@ -16,32 +13,27 @@ namespace CatalogoApi.Controllers
     [ApiController]
     public class CategoriasController : ControllerBase
     {
-        private readonly ICatalogoRepo<Categoria> _repository;
-        public CategoriasController(ICatalogoRepo<Categoria> repository) => _repository = repository;
+        private readonly AppDbContext _context;
+        public CategoriasController(AppDbContext context) => _context = context;
 
         [HttpGet]
-        public ActionResult<IEnumerable<Categoria>> GetCategorias()
-        {
-            return Ok(_repository.GetAll());
-
-            return _context.Categoria.AsNoTracking().ToList();
-        }
+        public ActionResult<IEnumerable<Categoria>> GetCategorias() => _context.Categoria.AsNoTracking().ToList();
 
         [HttpGet("{id}", Name = "ObterCategoria")]
         public ActionResult<Categoria> GetSingleCategory(int id)
         {
-            var category = _context.Categoria.AsNoTracking().FirstOrDefault(p => p.CategoriaId == id);
+            var categoria = _context.Categoria.AsNoTracking().FirstOrDefault(p => p.CategoriaId == id);
 
-            if (category == null)
+            if (categoria == null)
                 return NotFound("Id não encontrada.");
 
-            return category;
+            return categoria;
         }
 
         [HttpPost]
         public ActionResult PostCategoria([FromBody] Categoria categoria)
         {
-            var valida = new ValidaCategoria(_context).ValidaCampos(categoria);
+            var valida = new ValidaCategoria().ValidaCampos(categoria);
 
 
             if (categoria.CategoriaId != 0)
@@ -65,26 +57,40 @@ namespace CatalogoApi.Controllers
         [HttpPut("{id}")]
         public ActionResult PutCategoria(int id, [FromBody] Categoria categoria)
         {
+            try
+            {
+                if (id != categoria.CategoriaId || categoria.CategoriaId != 0)
+                    return BadRequest();
 
-            if (id != categoria.CategoriaId || id == 0)
-                return BadRequest();
-
-            _context.Entry(categoria).State = EntityState.Modified;
-            _context.SaveChanges();
-            return Ok();
+                _context.Entry(categoria).State = EntityState.Modified;
+                _context.SaveChanges();
+                return Ok();
+            }
+            catch
+            {
+                return BadRequest("Verifique a Id e os demais inputs.");
+            }
+            
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public ActionResult<Categoria> DeleteCategoria(int id)
         {
-            var categoria = _context.Categoria.FirstOrDefault(p => p.CategoriaId == id);
+            try
+            {
+                var categoria = _context.Categoria.FirstOrDefault(p => p.CategoriaId == id);
+                if (categoria == null)
+                    return NotFound("Id não encontrada.");
 
-            if (categoria == null)
-                return NotFound("Id não encontrada.");
-
-            _context.Categoria.Remove(categoria);
-            _context.SaveChanges();
-            return categoria;
+                _context.Categoria.Remove(categoria);
+                _context.SaveChanges();
+                return NoContent();
+            }
+            catch
+            {
+               return BadRequest("Verifique as informações que estão sendo passadas e se a categoria está englobando algum dos produtos. Para deletar uma categoria," +
+                           " certifique-se de que esta não está sendo usada por nenhum produto.");
+            }
         }
     }
 }

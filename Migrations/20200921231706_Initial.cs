@@ -33,7 +33,7 @@ namespace CatalogoApi.Migrations
                     ImageUrl = table.Column<string>(maxLength: 300, nullable: false),
                     Estoque = table.Column<double>(nullable: false),
                     DataCadastro = table.Column<DateTime>(nullable: false),
-                    CategoriaId = table.Column<int>(nullable: true)
+                    CategoriaId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -43,7 +43,7 @@ namespace CatalogoApi.Migrations
                         column: x => x.CategoriaId,
                         principalTable: "Categorias",
                         principalColumn: "CategoriaId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -54,6 +54,11 @@ namespace CatalogoApi.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Produtos");
+
+            migrationBuilder.DropTable(
+                name: "Categorias");
         }
     }
 }

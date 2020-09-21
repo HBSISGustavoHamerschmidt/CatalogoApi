@@ -1,13 +1,9 @@
 ﻿using CatalogoApi.Models;
-using Web.Api.Hbsis.Models.Context;
 
 namespace CatalogoApi.Validator
 {
     public class ValidaCategoria : ValidatorAbstract
     {
-        private readonly AppDbContext _context;
-        public ValidaCategoria(AppDbContext context) => _context = context;
-
         public ValidaCategoria ValidaCampos(Categoria categoria)
         {
 

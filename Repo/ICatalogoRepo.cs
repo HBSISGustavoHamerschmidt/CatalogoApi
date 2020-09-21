@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿/*
+
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 
@@ -14,3 +16,6 @@ namespace CatalogoApi.Repo
         void Delete(T obj);
     }
 }
+
+Tentei implementar mas não deu tempo.
+*/
