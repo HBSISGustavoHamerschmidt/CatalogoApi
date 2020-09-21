@@ -41,11 +41,12 @@ namespace CatalogoApi.Controllers
         [HttpPost]
         public ActionResult PostProduto([FromBody]Produto produto)
         {
-            if (_context.Produtos.FirstOrDefault(p => p.ProdutoId == produto.ProdutoId) != null)
+            if (produto.ProdutoId != 0)
                 return BadRequest(
                     "Identificador do produto é adicionado automaticamente e não deve ser passado como parâmetro.");
             
-
+            produto.DataCadastro = DateTime.Now;
+            
             _context.Produtos.Add(produto);
             _context.SaveChanges();
 

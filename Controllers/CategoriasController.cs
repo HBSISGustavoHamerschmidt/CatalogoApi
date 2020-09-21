@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CatalogoApi.Models;
+using CatalogoApi.Validator;
 using Web.Api.Hbsis.Models.Context;
 
 namespace CatalogoApi.Controllers
@@ -30,30 +31,40 @@ namespace CatalogoApi.Controllers
             var category = _context.Categoria.AsNoTracking().FirstOrDefault(p => p.CategoriaId == id);
 
             if (category == null)
-                return NotFound();
+                return NotFound("Id não encontrada.");
 
             return category;
         }
 
         [HttpPost]
-        public ActionResult PostCategoria([FromBody] Categoria category)
+        public ActionResult PostCategoria([FromBody] Categoria categoria)
         {
-            if (_context.Categoria.FirstOrDefault(p => p.CategoriaId == category.CategoriaId) != null)
-                return BadRequest(
-                    "Identificador da categoria é adicionado automaticamente e não deve ser passado como parâmetro.");
+            var valida = new ValidaCategoria(_context).ValidaCampos(categoria);
 
 
-            _context.Categoria.Add(category);
+            if (categoria.CategoriaId != 0)
+            {
+                valida.IsValid = false;
+                valida.Errors.Add("Identificador da categoria é adicionado automaticamente e não deve ser passado como parâmetro.");
+            }
+
+            if (!valida.IsValid)
+                return BadRequest(valida.Errors);
+                    
+
+
+            _context.Categoria.Add(categoria);
             _context.SaveChanges();
 
             return new CreatedAtRouteResult("ObterCategoria",
-                new { id = category.CategoriaId }, category);
+                new { id = categoria.CategoriaId }, categoria);
         }
 
         [HttpPut("{id}")]
         public ActionResult PutCategoria(int id, [FromBody] Categoria categoria)
         {
-            if (id != categoria.CategoriaId)
+
+            if (id != categoria.CategoriaId || id == 0)
                 return BadRequest();
 
             _context.Entry(categoria).State = EntityState.Modified;
@@ -67,7 +78,7 @@ namespace CatalogoApi.Controllers
             var categoria = _context.Categoria.FirstOrDefault(p => p.CategoriaId == id);
 
             if (categoria == null)
-                return NotFound();
+                return NotFound("Id não encontrada.");
 
             _context.Categoria.Remove(categoria);
             _context.SaveChanges();
