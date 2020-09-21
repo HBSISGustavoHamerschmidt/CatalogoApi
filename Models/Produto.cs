@@ -17,9 +17,9 @@ namespace CatalogoApi.Models
         [Required]
         public decimal Preco { get; set; }
         [Required]
+        [MaxLength(300)]
         public string ImageUrl { get; set; }
         [Required]
-        [MaxLength(300)]
         public double Estoque { get; set; }
         public DateTime DataCadastro { get; set; }
         public Categoria Categoria { get; set; }
