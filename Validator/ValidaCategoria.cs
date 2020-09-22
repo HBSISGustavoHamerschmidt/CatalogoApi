@@ -7,10 +7,10 @@ namespace CatalogoApi.Validator
         public ValidaCategoria ValidaCampos(Categoria categoria)
         {
 
-            if (categoria.Nome is null || categoria.Nome.Length == 0 )
+            if (string.IsNullOrEmpty(categoria.Nome))
             {
                 IsValid = false;
-                Errors.Add("Os campos Nome e ImageUrl não podem ser nulos ou vazios.");
+                Errors.Add("O campo Nome não pode ser nulo ou vazio.");
             }
 
             if (Regex.IsMatch(categoria.Nome))

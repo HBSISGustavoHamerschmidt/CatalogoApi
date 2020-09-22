@@ -1,5 +1,4 @@
-﻿using System;
-using CatalogoApi.Models;
+﻿using CatalogoApi.Models;
 using CatalogoApi.Validator;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -44,8 +43,6 @@ namespace CatalogoApi.Controllers
 
             if (!valida.IsValid)
                 return BadRequest(valida.Errors);
-                    
-
 
             _context.Categoria.Add(categoria);
             _context.SaveChanges();
@@ -70,7 +67,6 @@ namespace CatalogoApi.Controllers
             {
                 return BadRequest("Verifique a Id e os demais inputs.");
             }
-            
         }
 
         [HttpDelete("{id}")]

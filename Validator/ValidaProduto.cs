@@ -8,7 +8,7 @@ namespace CatalogoApi.Validator
         public ValidaProduto ValidaCampos(Produto produto)
         {
 
-            if (produto.Nome is null || produto.Nome.Length == 0 ||  produto.Descricao == null)
+            if (string.IsNullOrEmpty(produto.Nome) ||  string.IsNullOrEmpty(produto.Descricao))
             {
                 IsValid = false;
                 Errors.Add("Os campos Nome e Descrição não podem ser nulos ou vazios.");
