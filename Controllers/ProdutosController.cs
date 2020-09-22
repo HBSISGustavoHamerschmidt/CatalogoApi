@@ -15,9 +15,9 @@ namespace CatalogoApi.Controllers
     {
         private readonly AppDbContext _context;
 
-        public ProdutosController(AppDbContext context) =>_context = context;
-        
-    [HttpGet]
+        public ProdutosController(AppDbContext context) => _context = context;
+
+        [HttpGet]
         public ActionResult<IEnumerable<Produto>> GetProdutos() => _context.Produtos.AsNoTracking().ToList();
 
         [HttpGet("{id}", Name = "ObterProduto")]
@@ -39,7 +39,7 @@ namespace CatalogoApi.Controllers
             if (produto.ProdutoId != 0)
             {
                 valida.IsValid = false;
-                valida.Errors.Add("Id do produto já é inserida automaticamente e não pode ser inserida manualmente.");
+                valida.Errors.Add("Id do produto já é inserido automaticamente e não pode ser inserido manualmente.");
             }
             if (!valida.IsValid)
             {
