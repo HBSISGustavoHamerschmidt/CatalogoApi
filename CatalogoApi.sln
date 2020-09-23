@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30406.217
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CatalogoApi", "CatalogoApi.csproj", "{8B8ACA56-B03E-460B-BC6D-A6AC2AE1B302}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrontEndAgoraVaiSocorro", "..\FrontEndAgoraVaiSocorro\FrontEndAgoraVaiSocorro.csproj", "{B5ED1920-417D-481B-9E29-ED6A46D0E6D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrontEnd", "..\FrontEndAgoraVaiSocorro\FrontEnd.csproj", "{B5ED1920-417D-481B-9E29-ED6A46D0E6D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
